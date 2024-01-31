@@ -4,13 +4,13 @@
 #include <sys/time.h>
 #include <ncurses.h>
 
-#define R 20
-#define C 15
+#define TABLE_ROW 20
+#define TABLE_COLUMN 15
 #define T 1
 #define F 0
 
-char Table[R][C] = {0};
-int final = 0;
+char	Table[TABLE_ROW][TABLE_COLUMN] = {0};
+int		final = 0;
 char GameOn = T;
 suseconds_t timer = 400000;
 int decrease = 1000;
@@ -19,6 +19,7 @@ typedef struct {
     char **array;
     int width, row, col;
 } Struct;
+
 Struct current;
 
 const Struct StructsArray[7]= {
@@ -58,7 +59,7 @@ int FunctionCP(Struct shape){
 	int i, j;
 	for(i = 0; i < shape.width;i++) {
 		for(j = 0; j < shape.width ;j++){
-			if((shape.col+j < 0 || shape.col+j >= C || shape.row+i >= R)){
+			if((shape.col+j < 0 || shape.col+j >= TABLE_COLUMN || shape.row+i >= TABLE_ROW)){
 				if(array[i][j])
 					return F;
 				
@@ -83,7 +84,7 @@ void FunctionRS(Struct shape){
 }
 
 void FunctionPT(){
-	char Buffer[R][C] = {0};
+	char Buffer[TABLE_ROW][TABLE_COLUMN] = {0};
 	int i, j;
 	for(i = 0; i < current.width ;i++){
 		for(j = 0; j < current.width ; j++){
@@ -92,11 +93,11 @@ void FunctionPT(){
 		}
 	}
 	clear();
-	for(i=0; i<C-9; i++)
+	for(i=0; i< TABLE_COLUMN - 9; i++)
 		printw(" ");
 	printw("42 Tetris\n");
-	for(i = 0; i < R ;i++){
-		for(j = 0; j < C ; j++){
+	for(i = 0; i < TABLE_ROW ;i++){
+		for(j = 0; j < TABLE_COLUMN; j++){
 			printw("%c ", (Table[i][j] + Buffer[i][j])? '#': '.');
 		}
 		printw("\n");
@@ -122,7 +123,7 @@ int main() {
 	gettimeofday(&before_now, NULL);
 	set_timeout(1);
 	Struct new_shape = FunctionCS(StructsArray[rand()%7]);
-    new_shape.col = rand()%(C-new_shape.width+1);
+    new_shape.col = rand()%( TABLE_COLUMN - new_shape.width + 1);
     new_shape.row = 0;
     FunctionDS(current);
 	current = new_shape;
@@ -147,25 +148,25 @@ int main() {
 							}
 						}
 						int n, m, sum, count=0;
-						for(n=0;n<R;n++){
+						for(n=0;n< TABLE_ROW;n++){
 							sum = 0;
-							for(m=0;m< C;m++) {
+							for(m=0;m< TABLE_COLUMN;m++) {
 								sum+=Table[n][m];
 							}
-							if(sum==C){
+							if(sum== TABLE_COLUMN){
 								count++;
 								int l, k;
 								for(k = n;k >=1;k--)
-									for(l=0;l<C;l++)
+									for(l=0;l< TABLE_COLUMN;l++)
 										Table[k][l]=Table[k-1][l];
-								for(l=0;l<C;l++)
+								for( l = 0; l < TABLE_COLUMN; l++)
 									Table[k][l]=0;
 								timer-=decrease--;
 							}
 						}
 						final += 100*count;
 						Struct new_shape = FunctionCS(StructsArray[rand()%7]);
-						new_shape.col = rand()%(C-new_shape.width+1);
+						new_shape.col = rand()%(TABLE_COLUMN - new_shape.width + 1);
 						new_shape.row = 0;
 						FunctionDS(current);
 						current = new_shape;
@@ -210,24 +211,24 @@ int main() {
 							}
 						}
 						int n, m, sum, count=0;
-						for(n=0;n<R;n++){
+						for(n=0;n<TABLE_ROW;n++){
 							sum = 0;
-							for(m=0;m< C;m++) {
+							for( m = 0; m < TABLE_COLUMN; m++) {
 								sum+=Table[n][m];
 							}
-							if(sum==C){
+							if(sum == TABLE_COLUMN){
 								count++;
 								int l, k;
 								for(k = n;k >=1;k--)
-									for(l=0;l<C;l++)
+									for(l = 0; l < TABLE_COLUMN; l++)
 										Table[k][l]=Table[k-1][l];
-								for(l=0;l<C;l++)
-									Table[k][l]=0;
+								for(l = 0; l <TABLE_COLUMN; l++)
+									Table[k][l] = 0;
 								timer-=decrease--;
 							}
 						}
 						Struct new_shape = FunctionCS(StructsArray[rand()%7]);
-						new_shape.col = rand()%(C-new_shape.width+1);
+						new_shape.col = rand() % (TABLE_COLUMN - new_shape.width + 1);
 						new_shape.row = 0;
 						FunctionDS(current);
 						current = new_shape;
@@ -260,8 +261,8 @@ int main() {
 	FunctionDS(current);
 	endwin();
 	int i, j;
-	for(i = 0; i < R ;i++){
-		for(j = 0; j < C ; j++){
+	for(i = 0; i < TABLE_ROW ;i++){
+		for(j = 0; j < TABLE_COLUMN ; j++){
 			printf("%c ", Table[i][j] ? '#': '.');
 		}
 		printf("\n");
